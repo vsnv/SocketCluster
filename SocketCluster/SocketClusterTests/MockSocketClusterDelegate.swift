@@ -11,8 +11,7 @@ import XCTest
 import SocketCluster
 
 class MockSocketClusterDelegate: SocketClusterDelegate {
-
-    func socketRocketClusterSucceededHandshake(socketRocketCluster: SocketCluster) {
+    func socketClusterSucceededHandshake(socketRocketCluster: SocketCluster) {
         guard let expectation = asyncExpectation else {
             XCTFail("SpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return

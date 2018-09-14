@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol Event {
+public protocol Event {
     var name: String {get}
     var cid: String {get}
     var data:[String: Any] {get}
