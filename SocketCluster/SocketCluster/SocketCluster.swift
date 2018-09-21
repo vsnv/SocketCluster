@@ -9,38 +9,95 @@
 import Foundation
 
 public protocol SocketCluster: class {
-    init(with: URL, logger: Logger)
+    init(with webSocket: WebSocket)
     var delegate: SocketClusterDelegate? {get set}
-    func connect(completion: (Bool)->Void)
+    func connect()
     func emit(event: Event)
 }
 
 public protocol SocketClusterDelegate: class {
     func socketClusterSucceededHandshake(socketRocketCluster: SocketCluster)
+    func socketClusterFailedHandshake(socketRocketCluster: SocketCluster)
 }
 
-class SocketClusterRealization: SocketCluster {
-    
-    var logger: Logger
+class SocketClusterImplementation: SocketCluster {
+
+    var webSocket: WebSocket
     
     func emit(event: Event) {
-       self.logger.info("Emitted event:\n cid: \(event.cid)\n name: \(event.name)\n data: \(event.data)")
+
+        let jsonObject: [String: Any] = [
+            "event": event.name,
+            "data": event.data,
+            "cid": event.cid
+        ]
+        
+        let valid = JSONSerialization.isValidJSONObject(jsonObject)
+
+        let jsonData = try! JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted)
+
+        webSocket.write(data: jsonData)
 
     }
     
-    required init(with url: URL, logger: Logger) {
-        self.logger = logger
-        
-        self.logger.info("SocketCluster initialized successfully with URL: \(url)")
+    required init(with webSocket: WebSocket) {
+        self.webSocket = webSocket
+        self.webSocket.delegate = self
     }
     
     var delegate: SocketClusterDelegate?
     
-    func connect(completion: (Bool)->Void) {
-        delegate?.socketClusterSucceededHandshake(socketRocketCluster: self)
-        self.logger.info("SocketClusterDelegate: SocketCluster Did Connect")
+    private var lastHandshakeCid = UUID()
+    
+    func connect() {
         
-        completion(true)
+        webSocket.open()
+
     }
     
+}
+
+extension SocketClusterImplementation: WebSocketDelegate {
+    
+    func webSocket(_ webSocket: WebSocket, didReceiveMessage message: String) {
+        if let dict = getDict(from: message), let rid = dict["rid"] as? String, rid == self.lastHandshakeCid.uuidString {
+            
+            delegate?.socketClusterSucceededHandshake(socketRocketCluster: self)
+            
+            
+        } else {
+            
+        }
+    }
+    
+    
+    func webSocketDidOpen(_ webSocket: WebSocket) {
+        sendHandshake()
+    }
+    
+    
+}
+
+extension SocketClusterImplementation {
+    private func sendHandshake() {
+        
+        self.lastHandshakeCid = UUID()
+        
+        let event: Event = EventImplementation(name: "#handshake", data: [:], cid: self.lastHandshakeCid.uuidString)
+        
+        emit(event: event)
+        
+        
+    }
+    
+    private func getDict(from message: String) -> [String: Any]? {
+        
+        if let data = message.data(using: String.Encoding.utf8), let json = try? JSONSerialization.jsonObject(with: data, options: []), let dict = json as? [String: Any] {
+
+            return dict
+            
+        } else {
+            return nil
+        }
+    }
 }

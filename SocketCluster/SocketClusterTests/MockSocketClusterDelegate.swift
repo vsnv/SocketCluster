@@ -11,12 +11,21 @@ import XCTest
 import SocketCluster
 
 class MockSocketClusterDelegate: SocketClusterDelegate {
-    func socketClusterSucceededHandshake(socketRocketCluster: SocketCluster) {
-        guard let expectation = asyncExpectation else {
+    func socketClusterFailedHandshake(socketRocketCluster: SocketCluster) {
+        guard let failExpectation = failExpectation else {
             XCTFail("SpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
-        expectation.fulfill()
+        failExpectation.fulfill()
     }
-    var asyncExpectation: XCTestExpectation?
+    
+    func socketClusterSucceededHandshake(socketRocketCluster: SocketCluster) {
+        guard let successExpectation = successExpectation else {
+            XCTFail("SpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+        successExpectation.fulfill()
+    }
+    var successExpectation: XCTestExpectation?
+    var failExpectation: XCTestExpectation?
 }

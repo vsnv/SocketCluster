@@ -16,6 +16,8 @@
 		B18249D4214C031C00F4857C /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18249D3214C031C00F4857C /* Logger.swift */; };
 		B18249D6214C03F900F4857C /* MockLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18249D5214C03F900F4857C /* MockLogger.swift */; };
 		B18249D8214C0A4B00F4857C /* MockSocketClusterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18249D7214C0A4B00F4857C /* MockSocketClusterDelegate.swift */; };
+		B1BA74352155246200723207 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BA74342155246200723207 /* WebSocket.swift */; };
+		B1BA743721552E3700723207 /* MockWebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BA743621552E3700723207 /* MockWebSocket.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +43,8 @@
 		B18249D3214C031C00F4857C /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		B18249D5214C03F900F4857C /* MockLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLogger.swift; sourceTree = "<group>"; };
 		B18249D7214C0A4B00F4857C /* MockSocketClusterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSocketClusterDelegate.swift; sourceTree = "<group>"; };
+		B1BA74342155246200723207 /* WebSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
+		B1BA743621552E3700723207 /* MockWebSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWebSocket.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +89,7 @@
 			children = (
 				B18249B6214BFFB300F4857C /* SocketCluster.h */,
 				B18249CD214BFFCD00F4857C /* SocketCluster.swift */,
+				B1BA74342155246200723207 /* WebSocket.swift */,
 				B18249D3214C031C00F4857C /* Logger.swift */,
 				B18249CF214BFFDF00F4857C /* Event.swift */,
 				B18249D1214C011D00F4857C /* EventResponse.swift */,
@@ -98,6 +103,7 @@
 			children = (
 				B18249C1214BFFB300F4857C /* SocketClusterTests.swift */,
 				B18249D7214C0A4B00F4857C /* MockSocketClusterDelegate.swift */,
+				B1BA743621552E3700723207 /* MockWebSocket.swift */,
 				B18249D5214C03F900F4857C /* MockLogger.swift */,
 				B18249C3214BFFB300F4857C /* Info.plist */,
 			);
@@ -217,6 +223,7 @@
 				B18249D0214BFFDF00F4857C /* Event.swift in Sources */,
 				B18249CE214BFFCD00F4857C /* SocketCluster.swift in Sources */,
 				B18249D4214C031C00F4857C /* Logger.swift in Sources */,
+				B1BA74352155246200723207 /* WebSocket.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,6 +234,7 @@
 				B18249D8214C0A4B00F4857C /* MockSocketClusterDelegate.swift in Sources */,
 				B18249C2214BFFB300F4857C /* SocketClusterTests.swift in Sources */,
 				B18249D6214C03F900F4857C /* MockLogger.swift in Sources */,
+				B1BA743721552E3700723207 /* MockWebSocket.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

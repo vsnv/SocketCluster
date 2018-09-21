@@ -11,25 +11,21 @@ import Foundation
 public protocol Event {
     var name: String {get}
     var cid: String {get}
-    var data:[String: Any] {get}
-    var completion: (EventResponse?)->Void {get}
+    var data: [String: Any] {get}
 }
 
-class EventRealisation: Event {
+class EventImplementation: Event {
     
     var name: String
     
     var cid: String
     
-    var data: [String : Any]
-    
-    var completion: (EventResponse?) -> Void
-    
-    init(name: String, data: [String : Any], cid: String, completion: @escaping (EventResponse?)->Void) {
+    var data: [String: Any]
+
+    init(name: String, data: [String:Any], cid: String) {
         self.name = name
         self.data = data
         self.cid = cid
-        self.completion = completion
     }
     
 }
