@@ -20,8 +20,8 @@ class SocketRocketClusterTests: XCTestCase {
         let socketRocketCluster = SocketClusterImplementation.init(with: webSocket)
         
         let mockDelegate = MockSocketClusterDelegate()
-        let successExpectation = expectation(description: "SocketRocketCluster calls the delegate as the result of an async method completion")
-        mockDelegate.successExpectation = successExpectation
+        let didConnectExpectation = expectation(description: "SocketRocketCluster called didConnectExpectation")
+        mockDelegate.didConnectExpectation = didConnectExpectation
         
         socketRocketCluster.delegate = mockDelegate
 
@@ -43,8 +43,9 @@ class SocketRocketClusterTests: XCTestCase {
         let socketRocketCluster = SocketClusterImplementation.init(with: webSocket)
         
         let mockDelegate = MockSocketClusterDelegate()
-        let failExpectation = expectation(description: "SocketRocketCluster calls the delegate as the result of an async method completion")
-        mockDelegate.failExpectation = failExpectation
+        let didConnectExpectation = expectation(description: "SocketRocketCluster called didConnectExpectation")
+        didConnectExpectation.isInverted = true
+        mockDelegate.didConnectExpectation = didConnectExpectation
         
         socketRocketCluster.delegate = mockDelegate
 
@@ -56,6 +57,77 @@ class SocketRocketClusterTests: XCTestCase {
             XCTAssertNil(error, "not all expectations fulfilled")
         }
         
+    }
+    
+    func testDidReceivePingSuccess() {
+        
+        // given
+        let webSocket = MockWebSocket(url: MockWebSocket.wrongConnectionStringStub)
+        
+        let socketRocketCluster = SocketClusterImplementation.init(with: webSocket)
+        
+        let mockDelegate = MockSocketClusterDelegate()
+        let didReceivePingExpectation = expectation(description: "SocketCluster called didReceivePing")
+        mockDelegate.didReceivePingExpectation = didReceivePingExpectation
+        
+        socketRocketCluster.delegate = mockDelegate
+        
+         socketRocketCluster.connect()
+
+        // when
+        webSocket.sendPing()
+        
+        // then
+        waitForExpectations(timeout: 1) { (error) in
+            XCTAssertNil(error, "not all expectations fulfilled")
+        }
+        
+    }
+    
+    func testDidReceivePingFail() {
+        
+        // given
+        let webSocket = MockWebSocket(url: MockWebSocket.wrongConnectionStringStub)
+        
+        let socketRocketCluster = SocketClusterImplementation.init(with: webSocket)
+        
+        let mockDelegate = MockSocketClusterDelegate()
+        let didReceivePingExpectation = expectation(description: "SocketCluster called didReceivePing")
+        didReceivePingExpectation.isInverted = true
+        mockDelegate.didReceivePingExpectation = didReceivePingExpectation
+        
+        socketRocketCluster.delegate = mockDelegate
+        
+        socketRocketCluster.connect()
+        
+        // when
+//        webSocket.sendPing()
+        
+        // then
+        waitForExpectations(timeout: 1) { (error) in
+            XCTAssertNil(error, "not all expectations fulfilled")
+        }
+        
+    }
+    
+    func testSendHandshakeAfterDidConnectSuccess() {
+        // given
+        let webSocket = MockWebSocket(url: MockWebSocket.rightConnectionStringStub)
+        let socketCluster = SocketClusterImplementation.init(with: webSocket)
+        
+        let mockDelegate = MockSocketClusterDelegate()
+        let didConnectExpectation = expectation(description: "SocketRocketCluster called didConnectExpectation")
+        mockDelegate.didConnectExpectation = didConnectExpectation
+        
+        socketCluster.delegate = mockDelegate
+        
+        // when
+        mockDelegate.socketClusterDidConnect(socketCluster)
+        
+        // then
+        waitForExpectations(timeout: 1) { (error) in
+            XCTAssertNil(error, "not all expectations fulfilled")
+        }
     }
     
 //    func testEmitEvent() {

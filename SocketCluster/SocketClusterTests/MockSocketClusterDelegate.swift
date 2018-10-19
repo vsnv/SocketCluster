@@ -10,22 +10,50 @@ import Foundation
 import XCTest
 import SocketCluster
 
-class MockSocketClusterDelegate: SocketClusterDelegate {
-    func socketClusterFailedHandshake(socketRocketCluster: SocketCluster) {
-        guard let failExpectation = failExpectation else {
-            XCTFail("SpyDelegate was not setup correctly. Missing XCTExpectation reference")
+class MockSocketClusterDelegate {
+    
+    var didConnectExpectation: XCTestExpectation?
+    var didReceivePingExpectation: XCTestExpectation?
+    var socketClusterSucceededHandshakeExpectation: XCTestExpectation?
+    var socketClusterFailedHandshakeExpectation: XCTestExpectation?
+    
+}
+
+extension MockSocketClusterDelegate: SocketClusterDelegate {
+    
+    func socketClusterDidReceivePing(_ socketCluster: SocketCluster) {
+        guard let didReceivePingExpectation = didReceivePingExpectation else {
+            XCTFail("MockSocketClusterDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
-        failExpectation.fulfill()
+        didReceivePingExpectation.fulfill()
     }
     
-    func socketClusterSucceededHandshake(socketRocketCluster: SocketCluster) {
-        guard let successExpectation = successExpectation else {
-            XCTFail("SpyDelegate was not setup correctly. Missing XCTExpectation reference")
+    
+    func socketClusterSucceededHandshake(_ socketCluster: SocketCluster) {
+        guard let socketClusterSucceededHandshakeExpectation = socketClusterSucceededHandshakeExpectation else {
+            XCTFail("MockSocketClusterDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
-        successExpectation.fulfill()
+        socketClusterSucceededHandshakeExpectation.fulfill()
     }
-    var successExpectation: XCTestExpectation?
-    var failExpectation: XCTestExpectation?
+    
+    
+    func socketClusterDidConnect(_ socketCluster: SocketCluster) {
+        guard let didConnectExpectation = didConnectExpectation else {
+            XCTFail("MockSocketClusterDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+        didConnectExpectation.fulfill()
+        
+        socketCluster.sendHandshake()
+    }
+    
+    func socketClusterFailedHandshake(_ socketRocketCluster: SocketCluster) {
+        guard let socketClusterFailedHandshakeExpectation = socketClusterFailedHandshakeExpectation else {
+            XCTFail("MockSocketClusterDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+        socketClusterFailedHandshakeExpectation.fulfill()
+    }
 }

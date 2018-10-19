@@ -21,6 +21,10 @@ class MockWebSocket: WebSocket {
         self.url = url
     }
     
+    func sendPing() {
+        delegate?.webSocket(self, didReceiveMessage: "#1")
+    }
+    
 
     func write(data: Data) {
         
@@ -55,14 +59,8 @@ class MockWebSocket: WebSocket {
         if self.url == MockWebSocket.rightConnectionStringStub {
             
             delegate?.webSocketDidOpen(self)
-            
-        } else {
-            
-            delegate?.webSocketDidOpen(self)
-            
+
         }
-        
-        
     }
     
     var delegate: WebSocketDelegate?
